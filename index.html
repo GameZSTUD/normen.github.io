@@ -1,6 +1,88 @@
+<!DOCTYPE html>
 <html>
-<header><title>This is title</title></header>
-<body>
-Hello world
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body {
+        background: #333333;
+    }
+    canvas {
+        background-color: #cccccc;
+    }
+</style>
+</head>
+<body onload="startGame()">
+<script>
+
+var player;
+
+function startGame() {
+    player = new component(30, 30, "red", 619.5, 850);
+    world.start();
+}
+
+
+
+var world = {
+    canvas : document.createElement("canvas"),
+    start : function() {
+        this.canvas.width = 1239;
+        this.canvas.height = 920;
+        this.context = this.canvas.getContext("2d");
+        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+        this.interval = setInterval(updateGameArea, 20);
+    },
+    clear : function() {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+}
+
+function component(width, height, color, x, y) {
+    this.width = width;
+    this.height = height;
+    this.speedX = 0;
+    this.speedY = 0;
+    this.x = x;
+    this.y = y;    
+    this.update = function() {
+        ctx = world.context;
+        ctx.fillStyle = color;
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
+    this.newPos = function() {
+        this.x += this.speedX;
+        this.y += this.speedY;        
+    }    
+}
+
+function updateGameArea() {
+    world.clear();
+    player.newPos();    
+    player.update();
+}
+
+// player movement
+document.onkeyup = function (e) {
+    // 'W' & 'S' Key's
+    if (e.which == 87) {
+        player.y -= 10;
+    } else if (e.which == 83) {
+        player.y += 10;
+    }
+
+    // 'A' & 'D' key's
+    if (e.which == 65) {
+        player.x -= 10;
+    } else if (e.which == 68) {
+        player.x += 10;
+    }
+};
+</script>
+
 </body>
 </html>
